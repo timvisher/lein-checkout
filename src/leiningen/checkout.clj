@@ -57,26 +57,6 @@
 (def task-dispatch
   {"ln" #'ln})
 
-(comment
-   (fn [n seq]
-     (flatten (map (partial take (- n 1)) (partition n seq))))
-   (= ((fn [seq n]
-         (flatten (map (partial take (- n 1)) (partition n seq)))) [1 2 4 5 7 8]))
-   (= ((fn [seq n]
-         (flatten (map (partial take (- n 1)) (partition n n [] seq)))) [1 2 3 4 5 6 7 8] 3) [1 2 4 5 7 8])
-
-   (= '(+ 1 1) (macroexpand-1 '(-> 1 (+ 1))))
-
-   (partition 3 3 [] [1 2 3 4 5 6 7 8])
-   (take 3 [1 2])
-   merge
-   mapcat
-   (partition 3 [1 2 3 4 5 6 7 8])
-
-   (loop [seq]
-     )
-   )
-
 (defn
   ^{:subtasks [#'leiningen.checkout/ln
                #'leiningen.checkout/rm
