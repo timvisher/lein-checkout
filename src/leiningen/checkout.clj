@@ -32,7 +32,6 @@ enable: re-enable checkouts, moving it back into place.
 
 Call `lein help checkout` for more options."
   [project & args]
-  (def *charnock* [project args])
   (apply
    (or (task-dispatch (first args)) (:default task-dispatch))
    (if (task-dispatch (first args))
