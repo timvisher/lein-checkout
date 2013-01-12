@@ -29,29 +29,19 @@
                             checkout-roots)]
        (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots))))))
 
+(defn directory-exists? [directory]
+  (and (fs/exists? directory)
+       (fs/directory? directory)))
+
 (defn link-to-checkouts [source & sources]
-  (let [directory-exists? #(and (fs/exists? %) (fs/directory? %))]
-    (when (not (directory-exists? "checkouts"))
-      (fs/mkdir "checkouts"))
-    (let [sources      (conj sources source)
-          sources      (filter (complement directory-exists?) sources)
-          source-paths (map fs/absolute-path sources)
-          command      (flatten ["ln" "-s" source-paths "checkouts/"])]
-      (apply shell/sh command))))
-
-(comment
-  (let [parent   (fs/expand-home "~/tmp/projects")
-        sources  (map (comp fs/absolute-path (partial fs/file parent)) (fs/list-dir parent))
-        target   (fs/expand-home "~")]
-    (apply link-to-checkouts target sources))
-  (fs/directory? (fs/expand-home "~/a"))
-
-  (conj nil "a")
-  (shell/sh "ls" "-aul" (fs/absolute-path (fs/expand-home "~")))
-  (shell/sh "pwd")
-  (require '[clojure.reflect :as r])
-  (clojure.pprint/pprint (:members (r/reflect String)))
-  )
+  (when (not (directory-exists? "checkouts"))
+    (fs/mkdir "checkouts"))
+  (let [sources      (conj sources source)
+        target       (fs/absolute-path "checkouts/")
+        sources      (filter (comp (complement directory-exists?) (partial fs/file target) fs/base-name) sources)
+        source-paths (map fs/absolute-path sources)
+        command      (flatten ["ln" "-s" source-paths target])]
+    (apply shell/sh command)))
 
 (defn ln
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
