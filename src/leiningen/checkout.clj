@@ -1,15 +1,10 @@
 (ns leiningen.checkout
-  (:require [clojure.pprint]
-            [fs.core :as fs])
+  (:require [fs.core                  :as fs]
+            [leiningen.checkout.utils :as utils])
   (:use [leiningen.checkout.ln      :only [ln]]
         [leiningen.checkout.rm      :only [rm]]
         [leiningen.checkout.enable  :only [enable]]
         [leiningen.checkout.disable :only [disable]]))
-
-(defn pprint-str [o]
-  (let [w (java.io.StringWriter.)]
-    (clojure.pprint/pprint o w)
-    (.toString w)))
 
 (def task-dispatch
   {"ln" #'ln
@@ -32,8 +27,10 @@ enable: re-enable checkouts, moving it back into place.
 
 Call `lein help checkout` for more options."
   [project & args]
+  #_(println (utils/pprint-str args))
   (apply
    (or (task-dispatch (first args)) (:default task-dispatch))
+   project
    (if (task-dispatch (first args))
      (rest args)
      args)))

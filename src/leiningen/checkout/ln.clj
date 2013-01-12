@@ -1,6 +1,7 @@
 (ns leiningen.checkout.ln
-  (:require [fs.core            :as fs]
-            [clojure.java.shell :as shell])
+  (:require [fs.core                  :as fs]
+            [clojure.java.shell       :as shell]
+            [leiningen.checkout.utils :as utils])
   (:use [leiningen.checkout.enable :only [enable]]))
 
 (defn lein-project? [dir]
@@ -43,18 +44,34 @@
         command      (flatten ["ln" "-s" source-paths target])]
     (apply shell/sh command)))
 
+(defn report-no-matches [pattern search-roots candidates-for-checkout]
+  (println (str "No matching projects found for : \"" pattern "\" in search roots: " search-roots "!"))
+  (println "Candidates:")
+  ;; NB: extract self-matcher to separate function?
+  (dorun
+   (map (comp println fs/base-name) (filter (complement (comp (partial = (fs/base-name fs/*cwd*)) fs/base-name)) candidates-for-checkout)))
+  candidates-for-checkout)
+
+(defn link-matching-candidates [matching-candidates-for-checkout]
+  (println "Linking:")
+  (dorun
+   (map (comp println fs/base-name) matching-candidates-for-checkout))
+  (println "into checkouts…")
+  (apply link-to-checkouts matching-candidates-for-checkout)
+  matching-candidates-for-checkout)
+
 (defn ln
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
-  [& [pattern]]
-  (let [candidates-for-checkout                   (checkout-candidates {:path "/Users/tvisher/projects" :search-depth 2})
-        candidate-pattern                         (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
-        candidate-matcher                         (comp (partial re-matches candidate-pattern) fs/base-name)
-        candidates-for-checkout                   (filter candidate-matcher candidates-for-checkout)
-        sorted-candidates-for-checkout            (sort-by fs/base-name candidates-for-checkout)
-        sorted-candidates-for-checkout-base-names (map fs/base-name sorted-candidates-for-checkout)]
-    (println "Linking:")
-    (dorun
-     (map println sorted-candidates-for-checkout-base-names))
-    (println "into checkouts…")
-    (apply link-to-checkouts sorted-candidates-for-checkout)
-    candidates-for-checkout))
+  [{:keys [checkout] :as project} & [pattern]]
+  (let [search-roots                            (:search-roots checkout)
+        candidates-for-checkout                 (apply checkout-candidates search-roots)
+        candidate-pattern                       (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
+        candidate-matcher                       (comp (partial re-matches candidate-pattern) fs/base-name)
+        self-matcher                            (comp (partial = (fs/base-name fs/*cwd*)) fs/base-name)
+        matching-candidates-for-checkout        (filter candidate-matcher candidates-for-checkout)
+        matching-candidates-for-checkout        (filter (complement self-matcher) matching-candidates-for-checkout)
+        sorted-matching-candidates-for-checkout (sort-by fs/base-name matching-candidates-for-checkout)]
+    (if (= 0 (count matching-candidates-for-checkout))
+      (report-no-matches candidate-pattern search-roots candidates-for-checkout)
+      (link-matching-candidates sorted-matching-candidates-for-checkout))))
+
