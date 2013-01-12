@@ -47,7 +47,7 @@
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
   [& [pattern]]
   (let [candidates-for-checkout                   (checkout-candidates {:path "/Users/tvisher/projects" :search-depth 2})
-        candidate-pattern                         (if pattern (re-pattern (str ".*" pattern ".*")) ".*")
+        candidate-pattern                         (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
         candidate-matcher                         (comp (partial re-matches candidate-pattern) fs/base-name)
         candidates-for-checkout                   (filter candidate-matcher candidates-for-checkout)
         sorted-candidates-for-checkout            (sort-by fs/base-name candidates-for-checkout)
@@ -58,7 +58,3 @@
     (println "into checkouts…")
     (apply link-to-checkouts sorted-candidates-for-checkout)
     candidates-for-checkout))
-
-(comment
-  (ln "clie")
-  )
