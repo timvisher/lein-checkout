@@ -19,7 +19,6 @@
         candidates
         (recur (next times) (into candidates (flatten (map list-dir-absolute candidates))))))))
 
-;;; NB: Looks like this is not working for multiple project roots?
 (defn checkout-candidates
   "List of checkout candidates in the parent directory and other directories listed in the :checkout map in `:user` and `project.clj`"
   ([]
