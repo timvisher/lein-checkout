@@ -10,4 +10,4 @@
   (println "# Checkouts enabled!")
   (println "# Current checkouts are:")
   (dorun
-   (map (comp println (partial str "#   ")) (fs/list-dir "checkouts"))))
+   (map (comp println (partial str "  ")) (fs/list-dir "checkouts"))))

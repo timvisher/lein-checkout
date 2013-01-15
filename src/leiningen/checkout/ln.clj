@@ -45,18 +45,18 @@
     (apply shell/sh command)))
 
 (defn report-no-matches [pattern search-roots candidates-for-checkout]
-  (println (str "No matching projects found for : \"" pattern "\" in search roots: " search-roots "!"))
-  (println "Candidates:")
+  (println (str "# No matching projects found for : \"" pattern "\" in search roots: " search-roots "!"))
+  (println "# Candidates:")
   ;; NB: extract self-matcher to separate function?
   (dorun
    (map (comp println fs/base-name) (filter (complement (comp (partial = (fs/base-name fs/*cwd*)) fs/base-name)) candidates-for-checkout)))
   candidates-for-checkout)
 
 (defn link-matching-candidates [matching-candidates-for-checkout]
-  (println "Linking:")
+  (println "# Linking:")
   (dorun
    (map (comp println fs/base-name) matching-candidates-for-checkout))
-  (println "into checkouts…")
+  (println "# into checkouts…")
   (apply link-to-checkouts matching-candidates-for-checkout)
   matching-candidates-for-checkout)
 
