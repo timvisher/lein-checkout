@@ -28,7 +28,7 @@
            checkout-roots (if-not (checkout-roots (fs/absolute-path fs/*cwd*))
                             (conj checkout-roots (fs/absolute-path fs/*cwd*))
                             checkout-roots)
-       (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots))))))
+       (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots)))))))
 
 (defn directory-exists? [directory]
   (and (fs/exists? directory)
