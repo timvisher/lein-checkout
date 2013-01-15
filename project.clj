@@ -1,4 +1,4 @@
-(defproject org.clojars.timvisher/lein-checkout "0.1.0-SNAPSHOT"
+(defproject org.clojars.timvisher/lein-checkout "1.0.0-RC1"
   :description "Manage your checkouts directory with ease"
   :url "https://github.com/timvisher/lein-checkout"
   :license {:name "Eclipse Public License"
