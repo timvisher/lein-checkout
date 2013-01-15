@@ -63,7 +63,7 @@
 (defn report-checkouts-disabled [pattern]
   (println "# Whoops! You've tried to checkout something when you're checkouts are disabled. You should:")
   (println)
-  (println "lein checkout enable; lein checkout " pattern)
+  (println "lein checkout enable; lein checkout " (str \" pattern \"))
   (println "# instead!"))
 
 (defn ln

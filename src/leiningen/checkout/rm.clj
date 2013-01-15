@@ -1,5 +1,6 @@
 (ns leiningen.checkout.rm
-  (:require [fs.core :as fs]))
+  (:require [fs.core                  :as fs]
+            [leiningen.checkout.utils :as utils]))
 
 (defn report-no-matches [non-matched-pattern candidates]
   (println (str "No matching projects found for: \""
@@ -12,7 +13,8 @@
 
 (defn rm-checkouts [pattern checkouts-to-rm]
   (println (str "# `rm`ing the following projects matching: \"" pattern "\":"))
-  (map println checkouts-to-rm)
+  (dorun
+   (map println checkouts-to-rm))
   (dorun
    (map (comp fs/delete (partial fs/file "checkouts")) checkouts-to-rm))
   checkouts-to-rm)
