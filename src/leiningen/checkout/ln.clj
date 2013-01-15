@@ -25,10 +25,10 @@
      (checkout-candidates (fs/parent fs/*cwd*)))
   ([& checkout-roots]
      (let [checkout-roots (into #{} checkout-roots)
-           checkout-roots (if-not (checkout-roots (fs/absolute-path fs/*cwd*))
-                            (conj checkout-roots (fs/absolute-path fs/*cwd*))
-                            checkout-roots)
-       (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots)))))))
+           checkout-roots (if-not (checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
+                            (conj checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
+                            checkout-roots)]
+           (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots))))))
 
 (defn directory-exists? [directory]
   (and (fs/exists? directory)
@@ -60,6 +60,13 @@
   (apply link-to-checkouts matching-candidates-for-checkout)
   matching-candidates-for-checkout)
 
+(defn report-checkouts-disabled [pattern]
+  (println "# Whoops! You've tried to checkout something when you're checkouts are disabled. You should:")
+  (println)
+  (println "lein checkout enable; lein checkout " pattern)
+  (println "# instead!")
+  (println))
+
 (defn ln
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
   [{:keys [checkout] :as project} & [pattern]]
@@ -71,6 +78,11 @@
         matching-candidates-for-checkout        (filter candidate-matcher candidates-for-checkout)
         matching-candidates-for-checkout        (filter (complement self-matcher) matching-candidates-for-checkout)
         sorted-matching-candidates-for-checkout (sort-by fs/base-name matching-candidates-for-checkout)]
-    (if (= 0 (count matching-candidates-for-checkout))
-      (report-no-matches candidate-pattern search-roots candidates-for-checkout)
-      (link-matching-candidates sorted-matching-candidates-for-checkout))))
+    (cond (utils/checkouts-disabled?)
+          (report-checkouts-disabled candidate-pattern)
+
+          (= 0 (count matching-candidates-for-checkout))
+          (report-no-matches candidate-pattern search-roots candidates-for-checkout)
+
+          :link-em-in
+          (link-matching-candidates sorted-matching-candidates-for-checkout))))

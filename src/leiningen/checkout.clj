@@ -8,6 +8,9 @@
 
 (def task-dispatch
   {"ln" #'ln
+   "rm" #'rm
+   "enable" #'enable
+   "disable" #'disable
    :default #'ln})
 
 (defn
