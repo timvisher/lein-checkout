@@ -25,9 +25,9 @@
      (checkout-candidates (fs/parent fs/*cwd*)))
   ([& checkout-roots]
      (let [checkout-roots (into #{} checkout-roots)
-           checkout-roots (if-not (checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
-                            (conj checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
-                            checkout-roots)]
+           checkout-roots (if-not (checkout-roots (fs/absolute-path fs/*cwd*))
+                            (conj checkout-roots (fs/absolute-path fs/*cwd*))
+                            checkout-roots)
        (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots))))))
 
 (defn directory-exists? [directory]
@@ -74,4 +74,3 @@
     (if (= 0 (count matching-candidates-for-checkout))
       (report-no-matches candidate-pattern search-roots candidates-for-checkout)
       (link-matching-candidates sorted-matching-candidates-for-checkout))))
-
