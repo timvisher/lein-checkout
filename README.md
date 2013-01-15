@@ -20,11 +20,11 @@ If your project tree looks like this
 
 And you're currently in project `a`, adding a checkout to project `b` would look like:
 
-    $ lein checkout ln b
+    $ lein checkout [ln] b
 
 Adding a checkout to all projects would be:
 
-    $ lein checkout ln .*
+    $ lein checkout [ln]
 
 `PATTERN` arguments are passed directly to `re-matches`
 
