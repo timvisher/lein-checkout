@@ -28,7 +28,7 @@
            checkout-roots (if-not (checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
                             (conj checkout-roots (fs/absolute-path (fs/parent fs/*cwd*)))
                             checkout-roots)]
-           (filter lein-project? (reduce into [] (map checkout-candidates-in-dir checkout-roots))))))
+       (filter lein-project? (flatten (map checkout-candidates-in-dir checkout-roots))))))
 
 (defn directory-exists? [directory]
   (and (fs/exists? directory)
@@ -64,8 +64,7 @@
   (println "# Whoops! You've tried to checkout something when you're checkouts are disabled. You should:")
   (println)
   (println "lein checkout enable; lein checkout " pattern)
-  (println "# instead!")
-  (println))
+  (println "# instead!"))
 
 (defn ln
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
@@ -86,3 +85,4 @@
 
           :link-em-in
           (link-matching-candidates sorted-matching-candidates-for-checkout))))
+

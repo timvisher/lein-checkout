@@ -30,7 +30,7 @@ enable: re-enable checkouts, moving it back into place.
 
 Call `lein help checkout` for more options."
   [project & args]
-  #_(println (utils/pprint-str args))
+  #_(println (utils/pprint-str [project args]))
   (apply
    (or (task-dispatch (first args)) (:default task-dispatch))
    project

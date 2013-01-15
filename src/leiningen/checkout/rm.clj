@@ -11,10 +11,10 @@
   candidates)
 
 (defn rm-checkouts [pattern checkouts-to-rm]
-  (println (str "`rm`ing the following projects matching: \"" pattern "\":"))
+  (println (str "# `rm`ing the following projects matching: \"" pattern "\":"))
   (map println checkouts-to-rm)
   (dorun
-   (map (comp fs/delete-dir (partial fs/file "checkouts")) checkouts-to-rm))
+   (map (comp fs/delete (partial fs/file "checkouts")) checkouts-to-rm))
   checkouts-to-rm)
 
 (defn rm
@@ -26,5 +26,4 @@
         matching-checkouts (filter candidate-matcher current-checkouts)]
     (if (= 0 (count matching-checkouts))
       (report-no-matches candidate-pattern current-checkouts)
-      (rm-checkouts candidate-pattern matching-checkouts))
-    ))
+      (rm-checkouts candidate-pattern matching-checkouts))))
