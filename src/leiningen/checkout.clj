@@ -1,36 +1,20 @@
 (ns leiningen.checkout
-  (:require [clojure.pprint]))
+  (:require [fs.core                  :as fs]
+            [leiningen.checkout.utils :as utils])
+  (:use [leiningen.checkout.ln      :only [ln]]
+        [leiningen.checkout.rm      :only [rm]]
+        [leiningen.checkout.enable  :only [enable]]
+        [leiningen.checkout.disable :only [disable]]))
 
-(defn pprint-str [o]
-  (let [w (java.io.StringWriter.)]
-    (clojure.pprint/pprint o w)
-    (.toString w)))
-
-(defn rm
-  "[pattern]: Remove all checkouts. If PATTERN is specified, only checkouts matching that pattern will be removed"
-  []
-  (println "Amazing rm action!"))
-
-(defn disable
-  "Disable all checkouts for a moment."
-  []
-  (println "Amazing disable action!"))
-
-(defn ln
-  "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching PATTERN."
-  []
-  (println "Amazing symlinking action!"))
-
-(defn enable
-  "Enable checkouts."
-  []
-  (println "Amazing enabling action!"))
+(def task-dispatch
+  {"ln" #'ln
+   :default #'ln})
 
 (defn
-  ^{:subtasks [#'leiningen.checkout/ln
-               #'leiningen.checkout/rm
-               #'leiningen.checkout/enable
-               #'leiningen.checkout/disable]}
+  ^{:subtasks [#'ln
+               #'rm
+               #'enable
+               #'disable]}
   checkout
   "Manage your checkouts directory.
 
@@ -43,9 +27,10 @@ enable: re-enable checkouts, moving it back into place.
 
 Call `lein help checkout` for more options."
   [project & args]
-  (println (pprint-str [project args])))
-
-(comment
-  (let [w (java.io.StringWriter.)] (clojure.pprint/pprint {} w) (.toString w))
-  (ns-resolve *ns* 'conj)
-  )
+  #_(println (utils/pprint-str args))
+  (apply
+   (or (task-dispatch (first args)) (:default task-dispatch))
+   project
+   (if (task-dispatch (first args))
+     (rest args)
+     args)))
