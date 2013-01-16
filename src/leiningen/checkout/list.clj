@@ -14,7 +14,9 @@
     (dorun
      (map println checkouts))))
 
-(defn list [project]
+(defn list
+  "List the contents your `checkouts` directory."
+  [project]
   (if (utils/checkouts-disabled?)
     (report-checkouts-disabled)
     (list-current-checkouts project)))
