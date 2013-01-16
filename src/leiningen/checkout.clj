@@ -1,23 +1,27 @@
 (ns leiningen.checkout
-  (:require [fs.core                  :as fs]
-            [leiningen.checkout.utils :as utils])
-  (:use [leiningen.checkout.ln      :only [ln]]
-        [leiningen.checkout.rm      :only [rm]]
-        [leiningen.checkout.enable  :only [enable]]
-        [leiningen.checkout.disable :only [disable]]))
+  (:refer-clojure :exclude [list])
+  (:require [fs.core                    :as fs]
+            [leiningen.checkout.utils   :as utils]
+            [leiningen.checkout.ln      :refer [ln]]
+            [leiningen.checkout.rm      :refer [rm]]
+            [leiningen.checkout.enable  :refer [enable]]
+            [leiningen.checkout.disable :refer [disable]]
+            [leiningen.checkout.list    :refer [list]]))
 
 (def task-dispatch
   {"ln" #'ln
    "rm" #'rm
    "enable" #'enable
    "disable" #'disable
+   "list" #'list
    :default #'ln})
 
 (defn
   ^{:subtasks [#'ln
                #'rm
                #'enable
-               #'disable]}
+               #'disable
+               #'list]}
   checkout
   "Manage your checkouts directory.
 
