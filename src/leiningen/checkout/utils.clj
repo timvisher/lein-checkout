@@ -8,4 +8,5 @@
     (.toString w)))
 
 (defn checkouts-disabled? []
-  (fs/exists? "disabled.checkouts"))
+  (and (not (fs/exists? "checkouts"))
+       (fs/exists? "disabled.checkouts")))

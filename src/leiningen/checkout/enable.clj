@@ -5,6 +5,7 @@
 (defn enable
   "Enable checkouts."
   [{:keys [checkout] :as project}]
+  ;; NB: This should check that checkouts are disabled _and_ that checkouts does not exist
   (if (utils/checkouts-disabled?)
    (fs/rename "disabled.checkouts" "checkouts"))
   (println "# Checkouts enabled!")

@@ -12,7 +12,7 @@
   candidates)
 
 (defn rm-checkouts [pattern checkouts-to-rm]
-  (println (str "# `rm`ing the following projects matching: \"" pattern "\":"))
+  (println (str "# `rm`ing the following projects matching \"" pattern "\":"))
   (dorun
    (map println checkouts-to-rm))
   (dorun
