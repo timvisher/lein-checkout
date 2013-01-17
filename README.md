@@ -30,7 +30,7 @@ Adding a checkout to all projects would be:
 
 `PATTERN` arguments are passed directly to `re-matches`.
 
-Keep in mind that `b` must be specified as a dependency of `a` or checkout will not find it. Why are you trying to create a checkout to a non-depedency?
+Keep in mind that `b` must be specified as a dependency of `a` or `checkout` will not find it. Why are you trying to create a checkout to a non-depedency?
 
 Other tasks include:
 
