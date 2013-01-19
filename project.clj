@@ -1,4 +1,4 @@
-(defproject org.clojars.timvisher/lein-checkout "1.0.0-beta.2"
+(defproject org.clojars.timvisher/lein-checkout "0.4.0"
   :description "Manage your checkouts directory with ease"
   :url "https://github.com/timvisher/lein-checkout"
   :repositories [["clojars" {:url "https://clojars.org/repo"

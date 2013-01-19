@@ -4,9 +4,9 @@ A Leiningen plugin to manage your checkouts without setting your hair on fire.
 
 ## Usage
 
-Put `[lein-checkout "1.0.0-beta.2"]` into the `:plugins` vector of your
+Put `[lein-checkout "0.4.0"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-checkout 1.0.0-beta.2`.
+lein-checkout 0.4.0`.
 
 `checkout` reads the `:dependencies` key out of your `project.clj` and then searches for those projects to create a checkout for them in a configurable manner. It allows you to do several other things with your checkouts as well.
 
