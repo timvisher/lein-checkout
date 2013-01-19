@@ -8,6 +8,8 @@ Put `[lein-checkout "0.4.0"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
 lein-checkout 0.4.0`.
 
+`checkout` follows [Semantic Versioning][semver]
+
 `checkout` reads the `:dependencies` key out of your `project.clj` and then searches for those projects to create a checkout for them in a configurable manner. It allows you to do several other things with your checkouts as well.
 
 By default, `checkout` searches the parent directory of the current project for projects. If you need fancier logic than that (i.e. you store your projects across multiple directory trees), you'll need to specify a `:checkout` key in your `project.clj` (for project by project configuration), or in your `:user` profile (for system wide configuration) which maps to a vector containing the absolute paths of directories which house your projects so that `checkout` can search there as well.
@@ -44,3 +46,5 @@ Other tasks include:
 Copyright © 2013 Tim Visher
 
 Distributed under the Eclipse Public License, the same as Clojure.
+
+[semver]: http://semver.org/
