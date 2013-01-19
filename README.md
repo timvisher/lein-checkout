@@ -10,7 +10,7 @@ lein-checkout 1.0.0-beta.2`.
 
 `checkout` reads the `:dependencies` key out of your `project.clj` and then searches for those projects to create a checkout for them in a configurable manner. It allows you to do several other things with your checkouts as well.
 
-By default, `checkout` searches the parent directory of the current project for projects by default. If you need fancier logic than that (i.e. you store your projects across multiple directory trees), you'll need to specify a `:checkout` key in your `project.clj` (for project by project configuration), or in your `:user` profile (for system wide configuration) which maps to a vector containing the absolute paths of directories which house your projects so that `checkout` can search there as well.
+By default, `checkout` searches the parent directory of the current project for projects. If you need fancier logic than that (i.e. you store your projects across multiple directory trees), you'll need to specify a `:checkout` key in your `project.clj` (for project by project configuration), or in your `:user` profile (for system wide configuration) which maps to a vector containing the absolute paths of directories which house your projects so that `checkout` can search there as well.
 
 If your project tree looks like this
 
