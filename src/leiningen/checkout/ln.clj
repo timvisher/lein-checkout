@@ -29,7 +29,8 @@
            checkout-roots (if-not (checkout-roots (fs/absolute-path (fs/parent root)))
                             (conj checkout-roots (fs/absolute-path (fs/parent root)))
                             checkout-roots)]
-       (map (comp project/read fs/absolute-path #(fs/file % "project.clj")) (filter lein-project? (flatten (map checkout-candidates-in-dir checkout-roots)))))))
+       {:projects (into #{} (map (comp project/read fs/absolute-path #(fs/file % "project.clj")) (filter lein-project? (flatten (map checkout-candidates-in-dir checkout-roots)))))
+        :search-roots checkout-roots})))
 
 (defn directory-exists? [directory]
   (and (fs/exists? directory)
@@ -53,8 +54,9 @@
    (map println (sort (into #{} (map :name candidates-for-checkout)))))
   candidates-for-checkout)
 
-(defn link-matching-candidates [project pattern matching-candidates-for-checkout]
-  (println (str "# Linking the following projects matching \"" pattern "\":"))
+(defn link-matching-candidates [project search-roots pattern matching-candidates-for-checkout]
+  (println (str "# Linking the following projects matching \"" pattern "\" in "))
+  (println (utils/bash-comment (utils/pprint-str search-roots)))
   (dorun
    (map (comp println :root) matching-candidates-for-checkout))
   (println "# into checkouts…")
@@ -71,8 +73,8 @@
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
   [{:keys [name dependencies] {:keys [search-roots]} :checkout :as project} & [pattern]]
   (let [dependency-names                        (into #{} (map (comp :artifact-id project/dependency-map) dependencies))
-        candidates-for-checkout                 (apply checkout-candidates project search-roots)
-        candidates-for-checkout                 (filter (comp dependency-names :name) candidates-for-checkout)
+        {:keys [projects search-roots]}         (apply checkout-candidates project search-roots)
+        candidates-for-checkout                 (filter (comp dependency-names :name) projects)
         candidate-pattern                       (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
         candidate-matcher                       (comp (partial re-matches candidate-pattern) :name)
         matching-candidates-for-checkout        (filter candidate-matcher candidates-for-checkout)
@@ -84,4 +86,4 @@
           (report-no-matches candidate-pattern search-roots candidates-for-checkout)
 
           :link-em-in
-          (link-matching-candidates project candidate-pattern sorted-matching-candidates-for-checkout))))
+          (link-matching-candidates project search-roots candidate-pattern sorted-matching-candidates-for-checkout))))
