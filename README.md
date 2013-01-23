@@ -4,9 +4,9 @@ A Leiningen plugin to manage your checkouts without setting your hair on fire.
 
 ## Usage
 
-Put `[lein-checkout "0.4.1"]` into the `:plugins` vector of your
+Put `[lein-checkout "0.4.2"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-checkout 0.4.1`.
+lein-checkout 0.4.2`.
 
 `checkout` follows [Semantic Versioning][semver]
 
