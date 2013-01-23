@@ -22,8 +22,6 @@
 
 (defn checkout-candidates
   "List of checkout candidates in the parent directory and other directories listed in the :checkout map in `:user` and `project.clj`"
-  ([project]
-     (checkout-candidates project))
   ([{:keys [root] :as project} & checkout-roots]
      (let [checkout-roots (into #{} checkout-roots)
            checkout-roots (if-not (checkout-roots (fs/absolute-path (fs/parent root)))
