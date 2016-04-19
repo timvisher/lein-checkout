@@ -16,7 +16,7 @@
   (dorun
    (map println checkouts-to-rm))
   (dorun
-   (map (comp fs/delete-dir (partial fs/file "checkouts")) checkouts-to-rm))
+   (map (comp fs/delete (partial fs/file "checkouts")) checkouts-to-rm))
   checkouts-to-rm)
 
 (defn rm
