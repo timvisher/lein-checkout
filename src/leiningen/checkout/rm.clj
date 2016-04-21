@@ -23,7 +23,7 @@
 (defn rm
   "[pattern]: Remove all checkouts. If PATTERN is specified, only checkouts matching that pattern will be removed"
   [{:keys [checkout root] :as project} & [pattern]]
-  (let [current-checkouts (fs/list-dir (str root File/separator "checkouts"))
+  (let [current-checkouts (fs/list-dir (fs/file root "checkouts"))
         candidate-pattern (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
         candidate-matcher (partial re-matches candidate-pattern)
         matching-checkouts (filter candidate-matcher current-checkouts)]
