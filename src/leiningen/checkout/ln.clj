@@ -67,17 +67,12 @@
   (println "lein checkout enable; lein checkout " (str \" pattern \"))
   (println "# instead!"))
 
-(defn extract-vals
-  "Creates a function will will return a vector of values by looking up the keys ks in map m"
-  [ks]
-  (fn [m] (map m ks)))
-
 (defn ln
   "[pattern]: Link project(s) into checkouts. If PATTERN is specified, link all projects matching `.*PATTERN.*`."
   [{:keys [name dependencies] {:keys [search-roots]} :checkout :as project} & [pattern]]
-  (let [dependency-coords                       (into #{} (map (comp (extract-vals [:group-id :artifact-id]) project/dependency-map) dependencies))
+  (let [dependency-coords                       (into #{} (map (comp (juxt :group-id :artifact-id) project/dependency-map) dependencies))
         {:keys [projects search-roots]}         (apply checkout-candidates project search-roots)
-        candidates-for-checkout                 (filter (comp dependency-coords (extract-vals [:group :name])) projects)
+        candidates-for-checkout                 (filter (comp dependency-coords (juxt :group :name)) projects)
         candidate-pattern                       (if pattern (re-pattern (str ".*" pattern ".*")) #".*")
         candidate-matcher                       (comp (partial re-matches candidate-pattern) :name)
         matching-candidates-for-checkout        (filter candidate-matcher candidates-for-checkout)
