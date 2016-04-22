@@ -1,7 +1,6 @@
 (ns leiningen.checkout.rm
   (:require [fs.core                  :as fs]
-            [leiningen.checkout.utils :as utils])
-  (:import (java.io File)))
+            [leiningen.checkout.utils :as utils]))
 
 (defn report-no-matches [non-matched-pattern candidates]
   (println (str "No matching projects found for: \""
